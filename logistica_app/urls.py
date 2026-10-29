@@ -9,4 +9,8 @@ urlpatterns = [
     path('generar-pdf/', views.generar_reporte_pdf, name='generar_pdf'),
     path('diagnostico/', views.estado_bd, name='estado_bd'),
     path('registro/', views.registro_view, name='registro'),
+    path('captura/', views.registrar_captura, name='registrar_captura'),
+    path('pedido/agregar/', views.agregar_pedido, name='agregar_pedido'),
+    path('mis-pedidos/', views.mis_pedidos, name='mis_pedidos'),
+    
 ]

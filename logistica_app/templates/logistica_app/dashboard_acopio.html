@@ -45,6 +45,14 @@
         </div>
     </div>
 
+        {% if messages %}
+    <div class="w-full max-w-[1280px] mx-auto px-6 pt-8 space-y-2">
+        {% for message in messages %}
+        <div class="p-4 border border-ash text-ink text-sm bg-mist rounded-sm">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <!-- Main Content -->
     <main class="w-full max-w-[1280px] mx-auto px-6 py-16 flex-grow">
         
@@ -64,18 +72,17 @@
                 </a>
             </div>
 
-            <!-- Acción Secundaria (Lote) -->
-            <div class="border border-ash rounded-sm p-8 md:p-10 flex flex-col items-start bg-mist/50">
+            <div class="border border-ash rounded-sm p-8 md:p-10 flex flex-col items-start bg-paper">
                 <div class="w-12 h-12 border border-ash bg-paper rounded-sm flex items-center justify-center mb-6">
                     <svg class="w-6 h-6 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg>
                 </div>
                 <h2 class="text-2xl font-medium text-ink tracking-tight mb-3">Registrar Captura</h2>
                 <p class="text-stone text-base mb-8">
-                    El módulo de captura de especies por embarcación será habilitado en la próxima actualización del sistema.
+                    Registra la descarga de las embarcaciones: especie, categoría, peso y precio por kilogramo.
                 </p>
-                <button disabled class="mt-auto bg-ash text-stone font-medium px-6 py-3 rounded-sm text-sm cursor-not-allowed">
-                    Próximamente
-                </button>
+                <a href="{% url 'registrar_captura' %}" class="mt-auto bg-transparent border border-ash hover:border-ink text-ink font-medium px-6 py-3 rounded-sm transition-colors text-sm">
+                    Registrar captura
+                </a>
             </div>
 
         </div>

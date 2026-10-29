@@ -1,1 +1,1 @@
-from . import usuario_repository, lote_repository, rol_repository
+from . import usuario_repository, lote_repository, rol_repository, pedido_repository

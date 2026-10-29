@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registrar Captura | Ruta del Mar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = { theme: { extend: { colors: { paper:'#ffffff', ink:'#0a0a0a', charcoal:'#1f1f1e', stone:'#535250', mist:'#e9e8e7', ash:'#e0dedc' }, fontFamily: { sans:['"Inter"','sans-serif'] } } } }
+  </script>
+</head>
+<body class="bg-paper text-ink min-h-screen font-sans flex flex-col">
+
+  <nav class="w-full bg-paper border-b border-mist h-[72px] sticky top-0 z-50">
+    <div class="max-w-[1280px] mx-auto px-6 h-full flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 bg-ink text-paper flex items-center justify-center rounded-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        </div>
+        <span class="text-xl font-semibold tracking-tight text-ink">Ruta del Mar<span class="text-stone font-normal text-sm ml-2">Operaciones</span></span>
+      </div>
+      <div class="flex items-center gap-6">
+        <span class="text-sm text-stone hidden sm:block">{{ request.session.nombre }}</span>
+        <a href="{% url 'logout' %}" class="bg-transparent border border-ash hover:border-ink text-ink text-sm font-medium px-5 py-2.5 rounded-sm transition-colors">Cerrar sesión</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="w-full max-w-[1280px] mx-auto px-6 py-16 flex-grow">
+    <div class="max-w-xl">
+      <h1 class="text-[40px] font-normal leading-[1.1] tracking-[-0.02em] mb-4">Registrar captura</h1>
+      <p class="text-base text-stone mb-10">Publica el inventario descargado por las embarcaciones para que los restaurantes lo vean hoy.</p>
+
+      {% if messages %}
+      <div class="mb-8 space-y-2">
+        {% for message in messages %}
+        <div class="p-4 border border-ink text-ink text-sm bg-mist rounded-sm">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <form action="{% url 'registrar_captura' %}" method="POST" class="border border-ash rounded-sm p-8 md:p-10 space-y-6">
+        {% csrf_token %}
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-ink">Especie</label>
+          <input type="text" name="especie" required placeholder="Ej. Camarón Macuil" value="{{ form.especie|default:'' }}"
+            class="w-full px-4 py-3 bg-paper border border-ash rounded-sm focus:outline-none focus:border-ink focus:ring-1 focus:ring-ink transition-colors text-base placeholder-stone text-ink">
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-ink">Categoría</label>
+          <div class="relative">
+            <select name="categoria" required class="w-full px-4 py-3 bg-paper border border-ash rounded-sm focus:outline-none focus:border-ink focus:ring-1 focus:ring-ink transition-colors text-base text-ink appearance-none cursor-pointer">
+              <option value="" disabled selected>Selecciona una opción...</option>
+              {% for cat in categorias %}
+              <option value="{{ cat }}" {% if form.categoria == cat %}selected{% endif %}>{{ cat }}</option>
+              {% endfor %}
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-ink">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-ink">Peso disponible (kg)</label>
+            <input type="number" name="peso_disponible_kg" required min="0.01" step="0.01" placeholder="0.00" value="{{ form.peso|default:'' }}"
+              class="w-full px-4 py-3 bg-paper border border-ash rounded-sm focus:outline-none focus:border-ink focus:ring-1 focus:ring-ink transition-colors text-base placeholder-stone text-ink">
+          </div>
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-ink">Precio por kg ($)</label>
+            <input type="number" name="precio_kg" required min="0.01" step="0.01" placeholder="0.00" value="{{ form.precio|default:'' }}"
+              class="w-full px-4 py-3 bg-paper border border-ash rounded-sm focus:outline-none focus:border-ink focus:ring-1 focus:ring-ink transition-colors text-base placeholder-stone text-ink">
+          </div>
+        </div>
+
+        <div class="pt-4 space-y-4">
+          <button type="submit" class="w-full bg-ink hover:bg-black text-paper font-medium py-3.5 rounded-sm transition-colors text-base">Publicar lote</button>
+          <a href="{% url 'dashboard_acopio' %}" class="w-full flex justify-center bg-transparent border border-ash hover:border-ink text-ink font-medium py-3.5 rounded-sm transition-colors text-base">Volver al panel</a>
+        </div>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

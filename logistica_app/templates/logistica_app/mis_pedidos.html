@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mis Pedidos | Ruta del Mar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = { theme: { extend: { colors: { paper:'#ffffff', ink:'#0a0a0a', charcoal:'#1f1f1e', stone:'#535250', mist:'#e9e8e7', ash:'#e0dedc' }, fontFamily: { sans:['"Inter"','sans-serif'] } } } }
+  </script>
+</head>
+<body class="bg-paper text-ink min-h-screen font-sans flex flex-col">
+
+  <nav class="w-full bg-paper border-b border-mist h-[72px] sticky top-0 z-50">
+    <div class="max-w-[1280px] mx-auto px-6 h-full flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 bg-ink text-paper flex items-center justify-center rounded-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        </div>
+        <span class="text-xl font-semibold tracking-tight text-ink">Ruta del Mar</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <a href="{% url 'dashboard_restaurante' %}" class="text-sm font-medium text-stone hover:text-ink">Catálogo</a>
+        <span class="text-sm text-stone hidden sm:block">{{ nombre }}</span>
+        <a href="{% url 'logout' %}" class="bg-ink hover:bg-black text-paper text-sm font-medium px-5 py-2.5 rounded-sm transition-colors">Cerrar sesión</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="w-full max-w-[1280px] mx-auto px-6 py-16 flex-grow">
+    <div class="mb-12">
+      <h1 class="text-[40px] font-normal leading-[1.1] tracking-[-0.02em] mb-4">Mis Pedidos</h1>
+      <p class="text-base text-stone">Historial de compras realizadas a los centros de acopio.</p>
+    </div>
+
+    {% if pedidos %}
+    <div class="border border-ash rounded-sm overflow-hidden">
+      <table class="w-full text-left border-collapse">
+        <thead class="bg-mist text-ink">
+          <tr>
+            <th class="px-6 py-4 text-sm font-medium uppercase tracking-wider border-b border-ash">Especie</th>
+            <th class="px-6 py-4 text-sm font-medium uppercase tracking-wider border-b border-ash">Cantidad</th>
+            <th class="px-6 py-4 text-sm font-medium uppercase tracking-wider border-b border-ash">Precio/kg</th>
+            <th class="px-6 py-4 text-sm font-medium uppercase tracking-wider border-b border-ash">Total</th>
+            <th class="px-6 py-4 text-sm font-medium uppercase tracking-wider border-b border-ash">Fecha</th>
+            <th class="px-6 py-4 text-sm font-medium uppercase tracking-wider border-b border-ash">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in pedidos %}
+          <tr class="border-b border-mist last:border-0 hover:bg-mist/30 transition-colors">
+            <td class="px-6 py-4 text-base font-medium text-ink">{{ p.especie }}</td>
+            <td class="px-6 py-4 text-base text-stone">{{ p.kg_solicitados|floatformat:2 }} kg</td>
+            <td class="px-6 py-4 text-base text-stone">${{ p.precio_kg|floatformat:2 }}</td>
+            <td class="px-6 py-4 text-base font-medium text-ink">${{ p.total|floatformat:2 }}</td>
+            <td class="px-6 py-4 text-sm text-stone">{{ p.fecha_pedido|date:"d/m/Y H:i" }}</td>
+            <td class="px-6 py-4">
+              <span class="px-3 py-1 text-xs font-medium rounded-full bg-paper border border-ash text-ink">
+                {{ p.estado|capfirst }}
+              </span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="py-20 flex flex-col items-center justify-center text-center border border-ash rounded-sm bg-mist/20">
+      <p class="text-2xl font-medium text-ink mb-2">Aún no tienes pedidos</p>
+      <p class="text-stone mb-8">Explora el catálogo diario para realizar tu primera compra.</p>
+      <a href="{% url 'dashboard_restaurante' %}" class="bg-ink hover:bg-black text-paper font-medium px-6 py-3 rounded-sm transition-colors text-sm">
+        Ir al Catálogo
+      </a>
+    </div>
+    {% endif %}
+
+  </main>
+</body>
+</html>

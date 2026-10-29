@@ -4,10 +4,11 @@ from django.http import HttpResponse
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import bcrypt
-
-# Importamos los repositorios 
 from .models import usuario_repository, lote_repository, rol_repository
 from .models.db_singleton import DatabaseSingleton
+from .models import usuario_repository, lote_repository, rol_repository, pedido_repository
+
+
 # --- VISTA DE LOGIN ---
 def login_view(request):
     if request.method == 'POST':
@@ -162,3 +163,109 @@ def estado_bd(request):
 def logout_view(request):
     request.session.flush()
     return redirect('login')
+
+CATEGORIAS = ["Pescado Blanco", "Crustáceos", "Moluscos"]
+
+# --- VISTA DE REGISTRO DE CAPTURA (MÓDULO DE CAPTURA) ---
+def registrar_captura(request):
+    if 'usuario_id' not in request.session:
+        return redirect('login')
+    if request.session.get('rol_id') != 1:   # solo acopio
+        return redirect('dashboard_restaurante')
+
+    if request.method == 'POST':
+        especie = request.POST.get('especie', '').strip()
+        categoria = request.POST.get('categoria', '').strip()
+        peso = request.POST.get('peso_disponible_kg', '').strip()
+        precio = request.POST.get('precio_kg', '').strip()
+
+        errores = []
+        if not especie:
+            errores.append('La especie es obligatoria.')
+        if categoria not in CATEGORIAS:
+            errores.append('Selecciona una categoría válida.')
+        try:
+            peso_kg = float(peso.replace(',', '.'))
+            if peso_kg <= 0: errores.append('El peso debe ser mayor a 0.')
+        except ValueError:
+            peso_kg = None; errores.append('El peso debe ser un número válido.')
+        try:
+            precio_kg = float(precio.replace(',', '.'))
+            if precio_kg <= 0: errores.append('El precio debe ser mayor a 0.')
+        except ValueError:
+            precio_kg = None; errores.append('El precio debe ser un número válido.')
+
+        if errores:
+            for e in errores:
+                messages.error(request, e)
+            return render(request, 'logistica_app/registro_captura.html', {
+                'categorias': CATEGORIAS,
+                'form': {'especie': especie, 'categoria': categoria, 'peso': peso, 'precio': precio},
+            })
+
+        try:
+            lote_id = lote_repository.crear_lote(
+                request.session.get('usuario_id'), especie, categoria, peso_kg, precio_kg)
+            messages.success(request, f'Lote de {especie} publicado correctamente (ID {lote_id}).')
+            return redirect('dashboard_acopio')
+        except Exception as e:
+            messages.error(request, f'Error al registrar la captura: {str(e)}')
+
+    return render(request, 'logistica_app/registro_captura.html', {
+        'categorias': CATEGORIAS, 'form': {},
+    })
+
+
+# --- ACTUALIZA TU VISTA EXISTENTE ---
+def dashboard_restaurante(request):
+    if 'usuario_id' not in request.session:
+        return redirect('login')
+    categoria = request.GET.get('categoria', '')
+    if categoria not in CATEGORIAS:
+        categoria = ''
+    try:
+        lotes = lote_repository.obtener_disponibles(categoria or None)
+    except Exception as e:
+        print(f"Error cargando lotes: {e}")
+        lotes = []
+    return render(request, 'logistica_app/dashboard_restaurante.html', {
+        'nombre': request.session.get('nombre'),
+        'lotes': lotes,
+        'categorias': CATEGORIAS,
+        'categoria_activa': categoria,
+    })
+
+def agregar_pedido(request):
+    if 'usuario_id' not in request.session:
+        return redirect('login')
+    
+    if request.method == 'POST':
+        id_lote = request.POST.get('id_lote')
+        kg_str = request.POST.get('kg_solicitados')
+        
+        try:
+            kg = float(kg_str.replace(',', '.'))
+            if kg <= 0:
+                raise ValueError
+        except ValueError:
+            messages.error(request, "Ingresa una cantidad de kg válida.")
+            return redirect('dashboard_restaurante')
+
+        try:
+            pedido_repository.crear_pedido(id_lote, request.session['usuario_id'], kg)
+            messages.success(request, f"Pedido de {kg} kg agregado exitosamente.")
+        except Exception as e:
+            messages.error(request, f"No se pudo procesar el pedido: {str(e)}")
+            
+    return redirect('dashboard_restaurante')
+
+def mis_pedidos(request):
+    if 'usuario_id' not in request.session:
+        return redirect('login')
+    
+    pedidos = pedido_repository.obtener_por_usuario(request.session['usuario_id'])
+    
+    return render(request, 'logistica_app/mis_pedidos.html', {
+        'nombre': request.session.get('nombre'),
+        'pedidos': pedidos
+    })
