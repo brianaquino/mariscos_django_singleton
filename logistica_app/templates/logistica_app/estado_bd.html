@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Estado BD | Ruta del Mar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { paper: '#ffffff', ink: '#0a0a0a', charcoal: '#1f1f1e', stone: '#535250', mist: '#e9e8e7', ash: '#e0dedc' }, fontFamily: { sans: ['"Inter"', 'sans-serif'] } } }
+        }
+    </script>
+</head>
+<body class="bg-mist text-ink min-h-screen font-sans flex items-center justify-center p-6">
+
+    <div class="w-full max-w-lg bg-paper border border-ash rounded-sm p-8 md:p-12">
+        
+        <!-- Header -->
+        <div class="mb-10 text-center">
+            <h1 class="text-[32px] font-normal text-ink leading-tight tracking-[-0.02em] mb-2">Monitor BD</h1>
+            <p class="text-sm text-stone font-medium uppercase tracking-widest">Patrón Singleton</p>
+        </div>
+
+        <!-- Stats Display -->
+        <div class="border-y border-ash py-8 mb-8 text-center">
+            <div class="text-[48px] font-normal text-ink tracking-tight leading-none mb-2">
+                {{ estado }}
+            </div>
+            <p class="text-base text-stone">Estado de conexión actual</p>
+        </div>
+
+        <!-- Info Box -->
+        <div class="bg-mist p-6 rounded-sm mb-8 border border-ash">
+            <p class="text-xs text-stone font-medium uppercase tracking-wider mb-2">Motor PostgreSQL</p>
+            <p class="text-sm text-ink font-mono break-words leading-relaxed">
+                {{ version }}
+            </p>
+        </div>
+
+        <!-- Primary Button -->
+        <a href="{% url 'login' %}" class="w-full flex justify-center bg-ink hover:bg-black text-paper font-medium py-4 rounded-sm transition-colors text-base">
+            Volver al sistema
+        </a>
+
+    </div>
+
+</body>
+</html>

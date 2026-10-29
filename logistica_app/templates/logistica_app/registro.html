@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Crear Cuenta | Ruta del Mar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { paper: '#ffffff', ink: '#0a0a0a', charcoal: '#1f1f1e', stone: '#535250', mist: '#e9e8e7', ash: '#e0dedc' },
+                    fontFamily: { sans: ['"Inter"', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-paper text-ink min-h-screen font-sans flex flex-col md:flex-row">
+
+    <!-- Sección Izquierda: Formulario minimalista -->
+    <div class="w-full md:w-1/2 flex items-center justify-center p-8 md:p-16 lg:p-24 bg-paper z-10 overflow-y-auto">
+        <div class="w-full max-w-md py-8">
+            
+            <div class="mb-12">
+                <!-- Wordmark Logo -->
+                <div class="flex items-center gap-2 mb-10">
+                    <div class="w-6 h-6 bg-ink text-paper flex items-center justify-center rounded-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <span class="text-xl font-semibold tracking-tight text-ink">Ruta del Mar</span>
+                </div>
+                
+                <h1 class="text-4xl md:text-[48px] font-normal text-ink leading-tight tracking-[-0.02em] mb-4">Crear cuenta</h1>
+                <p class="text-base text-stone">Registra tu centro de acopio o restaurante para comenzar.</p>
+            </div>
+
+            {% if messages %}
+            <div class="mb-8 p-4 border border-ink text-ink text-sm bg-mist rounded-sm">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form action="{% url 'registro' %}" method="POST" class="space-y-6">
+                {% csrf_token %}
+                
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-ink">Nombre comercial</label>
+                    <!-- Input Kajabi: rounded-2px, borde fino ash, focus ink -->
+                    <input type="text" name="nombre" required placeholder="Ej. Cooperativa del Sur" 
+                           class="w-full px-4 py-3 bg-paper border border-ash rounded-sm focus:outline-none focus:border-ink focus:ring-1 focus:ring-ink transition-colors text-base placeholder-stone text-ink">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-ink">Correo electrónico</label>
+                    <input type="email" name="correo" required placeholder="contacto@empresa.com" 
+                           class="w-full px-4 py-3 bg-paper border border-ash rounded-sm focus:outline-none focus:border-ink focus:ring-1 focus:ring-ink transition-colors text-base placeholder-stone text-ink">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-ink">Contraseña</label>
+                    <input type="password" name="password" required placeholder="••••••••" 
+                           class="w-full px-4 py-3 bg-paper border border-ash rounded-sm focus:outline-none focus:border-ink focus:ring-1 focus:ring-ink transition-colors text-base placeholder-stone text-ink">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-ink">Tipo de cuenta</label>
+                    <div class="relative">
+                        <select name="rol" required class="w-full px-4 py-3 bg-paper border border-ash rounded-sm focus:outline-none focus:border-ink focus:ring-1 focus:ring-ink transition-colors text-base text-ink appearance-none cursor-pointer">
+                            <option value="" disabled selected>Selecciona una opción...</option>
+                            {% for rol in roles %}
+                                <option value="{{ rol.id_rol }}">{{ rol.nombre_rol }}</option>
+                            {% endfor %}
+                        </select>
+                        <!-- Flecha personalizada estricta -->
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-ink">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4 space-y-4">
+                    <!-- Primary Filled Button -->
+                    <button type="submit" class="w-full bg-ink hover:bg-black text-paper font-medium py-3.5 rounded-sm transition-colors text-base">
+                        Registrarse ahora
+                    </button>
+
+                    <!-- Secondary Outlined Button link to login -->
+                    <a href="{% url 'login' %}" class="w-full flex justify-center bg-transparent border border-ash hover:border-ink text-ink font-medium py-3.5 rounded-sm transition-colors text-base">
+                        Ya tengo una cuenta
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sección Derecha: Fotografía a sangre -->
+    <div class="hidden md:block md:w-1/2 relative bg-charcoal">
+        <img src="https://cloudfront-us-east-1.images.arcpublishing.com/gfrmedia/NFWADS6MC5DCZM2Q6GJQALRLDY.jpeg" 
+             alt="Mercado de mariscos" 
+             class="absolute inset-0 w-full h-full object-cover" />
+    </div>
+
+</body>
+</html>

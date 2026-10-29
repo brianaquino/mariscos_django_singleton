@@ -1,0 +1,41 @@
+Byte-compiled / optimized / DLL files
+
+pycache/
+*.py[cod]
+*$py.class
+
+Caches / Local Data
+
+*.sqlite3
+*.db
+
+Virtual Environment
+
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+Environment Variables
+
+.env
+.env.local
+.env.*.local
+
+IDE & Editor files
+
+.vscode/
+.idea/
+*.swp
+*.swo
+
+OS files
+
+.DS_Store
+Thumbs.db
+
+Documentation / Local export files (optional, based on your structure)
+
+*.pdf
+*.md

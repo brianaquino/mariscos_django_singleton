@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Acopio | Ruta del Mar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { paper: '#ffffff', ink: '#0a0a0a', charcoal: '#1f1f1e', stone: '#535250', mist: '#e9e8e7', ash: '#e0dedc' }, fontFamily: { sans: ['"Inter"', 'sans-serif'] } } }
+        }
+    </script>
+</head>
+<body class="bg-paper text-ink min-h-screen font-sans flex flex-col">
+
+    <!-- Top Navigation Bar -->
+    <nav class="w-full bg-paper border-b border-mist h-[72px] sticky top-0 z-50">
+        <div class="max-w-[1280px] mx-auto px-6 h-full flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 bg-ink text-paper flex items-center justify-center rounded-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <span class="text-xl font-semibold tracking-tight text-ink">Ruta del Mar <span class="text-stone font-normal text-sm ml-2">Operaciones</span></span>
+            </div>
+            
+            <div class="flex items-center gap-6">
+                <span class="text-sm text-stone hidden sm:block">{{ request.session.nombre }}</span>
+                <a href="{% url 'logout' %}" class="bg-transparent border border-ash hover:border-ink text-ink text-sm font-medium px-5 py-2.5 rounded-sm transition-colors">
+                    Cerrar sesión
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dark Section Band para el Hero -->
+    <div class="w-full bg-charcoal text-paper py-20">
+        <div class="max-w-[1280px] mx-auto px-6">
+            <h1 class="text-[40px] md:text-[48px] font-normal leading-[1.1] tracking-[-0.02em] mb-4">
+                Panel de Centro de Acopio
+            </h1>
+            <p class="text-lg text-mist max-w-2xl">
+                Gestiona las descargas de las embarcaciones, publica el inventario para los restaurantes y genera los reportes de salida diarios.
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="w-full max-w-[1280px] mx-auto px-6 py-16 flex-grow">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+            
+            <!-- Acción Principal (Reporte) -->
+            <div class="border border-ash rounded-sm p-8 md:p-10 flex flex-col items-start bg-paper">
+                <div class="w-12 h-12 border border-ash rounded-sm flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <h2 class="text-2xl font-medium text-ink tracking-tight mb-3">Generar Reporte PDF</h2>
+                <p class="text-stone text-base mb-8">
+                    Emite el documento oficial del día con el inventario completo, pesos exactos y precios para su distribución física.
+                </p>
+                <a href="{% url 'generar_pdf' %}" target="_blank" class="mt-auto bg-ink hover:bg-black text-paper font-medium px-6 py-3 rounded-sm transition-colors text-sm">
+                    Descargar Inventario
+                </a>
+            </div>
+
+            <!-- Acción Secundaria (Lote) -->
+            <div class="border border-ash rounded-sm p-8 md:p-10 flex flex-col items-start bg-mist/50">
+                <div class="w-12 h-12 border border-ash bg-paper rounded-sm flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg>
+                </div>
+                <h2 class="text-2xl font-medium text-ink tracking-tight mb-3">Registrar Captura</h2>
+                <p class="text-stone text-base mb-8">
+                    El módulo de captura de especies por embarcación será habilitado en la próxima actualización del sistema.
+                </p>
+                <button disabled class="mt-auto bg-ash text-stone font-medium px-6 py-3 rounded-sm text-sm cursor-not-allowed">
+                    Próximamente
+                </button>
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>

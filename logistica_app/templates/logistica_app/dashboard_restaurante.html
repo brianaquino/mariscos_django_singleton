@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Catálogo | Ruta del Mar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { paper: '#ffffff', ink: '#0a0a0a', charcoal: '#1f1f1e', stone: '#535250', mist: '#e9e8e7', ash: '#e0dedc' }, fontFamily: { sans: ['"Inter"', 'sans-serif'] } } }
+        }
+    </script>
+</head>
+<body class="bg-paper text-ink min-h-screen font-sans flex flex-col">
+
+    <!-- Top Navigation Bar -->
+    <nav class="w-full bg-paper border-b border-mist h-[72px] sticky top-0 z-50">
+        <div class="max-w-[1280px] mx-auto px-6 h-full flex justify-between items-center">
+            <!-- Logo Lockup -->
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 bg-ink text-paper flex items-center justify-center rounded-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <span class="text-xl font-semibold tracking-tight text-ink">Ruta del Mar</span>
+            </div>
+            
+            <!-- Navigation Links -->
+            <div class="hidden md:flex gap-8">
+                <span class="text-sm font-medium text-ink">Catálogo Diario</span>
+                <span class="text-sm font-medium text-stone hover:text-ink cursor-pointer">Mis Pedidos</span>
+            </div>
+
+            <!-- User / Action -->
+            <div class="flex items-center gap-6">
+                <span class="text-sm text-stone hidden sm:block">{{ request.session.nombre }}</span>
+                <a href="{% url 'logout' %}" class="bg-ink hover:bg-black text-paper text-sm font-medium px-5 py-2.5 rounded-sm transition-colors">
+                    Cerrar sesión
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="w-full max-w-[1280px] mx-auto px-6 py-16 md:py-20 flex-grow">
+        
+        <!-- Hero Section -->
+        <div class="mb-16 md:mb-20 max-w-3xl">
+            <h1 class="text-[40px] md:text-[60px] font-normal text-ink leading-[1.1] tracking-[-0.03em] mb-6">
+                Capturas del día.
+            </h1>
+            <p class="text-[20px] font-normal text-stone leading-[1.4] max-w-2xl">
+                Mariscos y pescados frescos registrados hoy en los centros de acopio costeros. Directo a tu cocina.
+            </p>
+        </div>
+
+        <!-- Filters (Pill Category Tabs) -->
+        <div class="flex flex-wrap gap-2 mb-12">
+            <span class="bg-ink text-paper text-sm font-medium px-4 py-2 rounded-full cursor-pointer">Todos</span>
+            <span class="bg-mist hover:bg-ash text-ink text-sm font-medium px-4 py-2 rounded-full cursor-pointer transition-colors">Pescado Blanco</span>
+            <span class="bg-mist hover:bg-ash text-ink text-sm font-medium px-4 py-2 rounded-full cursor-pointer transition-colors">Crustáceos</span>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
+            {% for lote in lotes %}
+            <div class="flex flex-col group cursor-pointer">
+                <!-- Image with 2px radius -->
+                <div class="w-full aspect-square bg-mist rounded-sm mb-4 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?q=80&w=600&auto=format&fit=crop" 
+                         alt="{{ lote.especie }}" 
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                
+                <div class="flex justify-between items-start mb-1">
+                    <h3 class="text-xl font-medium text-ink tracking-tight">{{ lote.especie }}</h3>
+                    <span class="text-lg font-normal text-ink">${{ lote.precio_kg }}<span class="text-sm text-stone">/kg</span></span>
+                </div>
+                
+                <p class="text-sm text-stone mb-4">{{ lote.proveedor_nombre }}</p>
+                
+                <div class="mt-auto flex items-center justify-between pt-4 border-t border-mist">
+                    <span class="text-sm font-medium text-ink">{{ lote.peso_disponible_kg }} kg disp.</span>
+                    <!-- Secondary Button outline style -->
+                    <button class="border border-ash hover:border-ink text-ink text-xs font-medium px-4 py-2 rounded-sm transition-colors">
+                        Añadir
+                    </button>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full py-20 flex flex-col items-center justify-center text-center border-y border-mist">
+                <p class="text-2xl font-medium text-ink mb-2">No hay inventario disponible</p>
+                <p class="text-stone">Los centros de acopio aún no han registrado capturas.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <!-- Simple Footer -->
+    <footer class="w-full border-t border-mist py-8 mt-auto">
+        <div class="max-w-[1280px] mx-auto px-6 text-center">
+            <p class="text-sm text-stone">© 2026 Ruta del Mar. Plataforma Logística.</p>
+        </div>
+    </footer>
+</body>
+</html>
