@@ -12,5 +12,6 @@ urlpatterns = [
     path('captura/', views.registrar_captura, name='registrar_captura'),
     path('pedido/agregar/', views.agregar_pedido, name='agregar_pedido'),
     path('mis-pedidos/', views.mis_pedidos, name='mis_pedidos'),
+    path('chofer/', views.dashboard_chofer, name='dashboard_chofer'),
     
 ]

@@ -27,6 +27,8 @@ def login_view(request):
                     
                     if user['id_rol'] == 1:
                         return redirect('dashboard_acopio')
+                    elif user['id_rol'] == 3:  
+                        return redirect('dashboard_chofer')
                     else:
                         return redirect('dashboard_restaurante')
             
@@ -268,4 +270,24 @@ def mis_pedidos(request):
     return render(request, 'logistica_app/mis_pedidos.html', {
         'nombre': request.session.get('nombre'),
         'pedidos': pedidos
+    })
+
+def dashboard_chofer(request):
+    if 'usuario_id' not in request.session:
+        return redirect('login')
+    
+    # Validamos que el rol pertenezca al chofer (ejemplo: ID 3)
+    if request.session.get('rol_id') != 3:
+        return redirect('login')
+        
+    try:
+        # Aquí puedes implementar un repositorio o consulta para obtener los envíos/pedidos a transportar
+        entregas = [] # pedido_repository.obtener_pendientes_entrega()
+    except Exception as e:
+        print(f"Error cargando entregas: {e}")
+        entregas = []
+
+    return render(request, 'logistica_app/dashboard_chofer.html', {
+        'nombre': request.session.get('nombre'),
+        'entregas': entregas
     })
